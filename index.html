@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomodoro Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 10px;
+      background: #f4f4f9;
+      color: #333;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    footer{
+    background-color: wheat;
+    position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: black;
+  text-align: center;
+}
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .timer {
+      font-size: 48px;
+      margin: 20px 0;
+    }
+
+    .buttons button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #007bff;
+      color: #fff;
+    }
+
+    .buttons button:hover {
+      background: #0056b3;
+    }
+
+    .buttons button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .edit-time {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .edit-time input {
+      width: 60px;
+      padding: 5px;
+      font-size: 16px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pomodoro Timer</h1>
+    <div class="timer" id="timer">25:00</div>
+    <div class="buttons">
+      <button id="start">Start</button>
+      <button id="pause">Pause</button>
+      <button id="reset">Reset</button>
+      <button id="edit">Edit Time</button>
+    </div>
+    <div class="edit-time" id="edit-time" style="display: none;">
+      <input type="number" id="edit-minutes" placeholder="Minutes" min="0">
+      <input type="number" id="edit-seconds" placeholder="Seconds" min="0" max="59">
+      <button id="save">Save</button>
+    </div>
+  </div>
+  <img src="assets/Untitled-3.png" alt="Get App Here" style="width: 100%;height: auto;" onclick="window.location.href='https://play.google.com/store/apps/details?id=com.pomodrone.app&hl=en'" >
+    <footer>
+        <a href="https://yassinedhouib8.wordpress.com" target="_blank"> &lt;The Web Developper\&gt;</a>
+    </footer>
+
+  <script>
+    const timerElement = document.getElementById("timer");
+    const startButton = document.getElementById("start");
+    const pauseButton = document.getElementById("pause");
+    const resetButton = document.getElementById("reset");
+    const editButton = document.getElementById("edit");
+    const editTimeDiv = document.getElementById("edit-time");
+    const saveButton = document.getElementById("save");
+    const editMinutesInput = document.getElementById("edit-minutes");
+    const editSecondsInput = document.getElementById("edit-seconds");
+
+    let time = 25 * 60; // 25 minutes in seconds
+    let intervalId = null;
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(time / 60).toString().padStart(2, "0");
+      const seconds = (time % 60).toString().padStart(2, "0");
+      timerElement.textContent = `${minutes}:${seconds}`;
+    }
+
+    function startTimer() {
+      if (intervalId === null) {
+        intervalId = setInterval(() => {
+          if (time > 0) {
+            time--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(intervalId);
+            intervalId = null;
+            alert("Time's up! Take a break.");
+          }
+        }, 1000);
+      }
+    }
+
+    function pauseTimer() {
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      time = 25 * 60;
+      updateTimerDisplay();
+    }
+
+    function toggleEditTime() {
+      editTimeDiv.style.display = editTimeDiv.style.display === "none" ? "block" : "none";
+    }
+
+    function saveTime() {
+      const minutes = parseInt(editMinutesInput.value, 10) || 0;
+      const seconds = parseInt(editSecondsInput.value, 10) || 0;
+      time = minutes * 60 + seconds;
+      updateTimerDisplay();
+      toggleEditTime();
+    }
+
+    editButton.addEventListener("click", toggleEditTime);
+    saveButton.addEventListener("click", saveTime);
+    startButton.addEventListener("click", startTimer);
+    pauseButton.addEventListener("click", pauseTimer);
+    resetButton.addEventListener("click", resetTimer);
+
+    updateTimerDisplay();
+  </script>
+</body>
+</html>
